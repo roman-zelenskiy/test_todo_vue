@@ -2,21 +2,8 @@ import { defineStore } from 'pinia'
 
 export const useTodoStore = defineStore('todoStore', {
     state: () => ({
-        todo: [
-            {
-                id: 1,
-                title: 'todo',
-                description: 'qqflkmfweffmkmewmgeopgewgpoewkgegergporkgkgrgopgrepokgrpokegrkegkoprgproke',
-                created: new Date()
-            },
-            {
-                id: 2,
-                title: 'todo2',
-                description: 'qqflkmfqwfqw;fdsvsdvdsgsddsflqwfweffmkmewmgeopgewgpoewkgegergporkgkgrgopgrepokgrpokegrkegkoprgproke',
-                created: new Date()
-            }
-        ],
-        activeId: 1
+        todo: [],
+        activeId: null
     }),
     getters: {
         activeTodo: (state) => (id) => {
@@ -29,16 +16,47 @@ export const useTodoStore = defineStore('todoStore', {
             });
 
             return activeTodo;
-        }
+        },
     },
     actions: {
-        setTodo() {
-            const todoLocalStorage = JSON.parse(localStorage.getItem('todos'));
-            
-            this.todo = todoLocalStorage;
-        }, 
+        filterTodo(filterParam) {
+            const regex = new RegExp(filterParam, 'i');
+
+            this.todo.forEach(el => {
+                if (!regex.test(el.title) && !regex.test(el.description)) {
+                    el.visible = false;
+                    return false;
+                }
+                el.visible = true;
+            })
+        },
+        resetfilter() {
+            this.todo.forEach(el => {
+                el.visible = true;
+            })
+        },
+        setTodo(todos) {
+            this.todo = todos;
+        },
+        setLocalStorage() {
+            localStorage.setItem('todos', JSON.stringify(this.todo));
+        },
         setActiveId(id) {
             this.activeId = id;
+        },
+        addTodo() {
+            const newTodo = {
+                id: this.todo.length + 1,
+                title: 'New Todo',
+                description: 'description todo',
+                created: new Date,
+                visible: true
+            }
+
+            this.todo = [...this.todo, newTodo];
+        },
+        removeTodo() {
+            this.todo = this.todo.filter(el => el.id !== this.activeId);
         }
     }
 })

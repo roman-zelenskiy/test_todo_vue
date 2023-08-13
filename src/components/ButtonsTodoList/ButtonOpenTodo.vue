@@ -17,7 +17,7 @@ const checkActiveTodo = computed(() => props.todo.id === activeTodoId.value);
 </script>
 
 <template>
-<button class="note_item" :class="{active: checkActiveTodo}" @click="setActiveId(todo.id)">
+<button class="note_item" v-show="todo.visible" :class="{active: checkActiveTodo}" @click="setActiveId(todo.id)">
     {{ todo.title }}
 </button>
 </template>
