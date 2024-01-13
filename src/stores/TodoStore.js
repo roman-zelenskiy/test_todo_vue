@@ -46,7 +46,7 @@ export const useTodoStore = defineStore('todoStore', {
         },
         addTodo() {
             const newTodo = {
-                id: this.todo.length + 1,
+                id: this.todo.length > 0 ? this.todo[this.todo.length - 1].id + 1 : 1,
                 title: 'New Todo',
                 description: 'description todo',
                 created: new Date,
